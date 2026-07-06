@@ -58,7 +58,6 @@ jobs:
         run: ./gradlew build --stacktrace
 
       - name: Collect and name release jars
-        id: collect
         run: |
           set -euo pipefail
 
