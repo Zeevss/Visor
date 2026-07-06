@@ -58,16 +58,24 @@ jobs:
         run: ./gradlew build --stacktrace
 
       - name: Collect and name release jars
+        id: collect
         run: |
-          set -euo pipefail
 
           BASE=$(grep -oP '^project_name\s*=\s*\K.*' gradle.properties | tr -d '[:space:]')
           MC=$(grep -oP 'minecraftVersion\s*=\s*"\K[^"]+' gradle/libs.versions.toml)
           PLATFORMS=$(grep -oP '^enabled_platforms\s*=\s*\K.*' gradle.properties | tr -d '[:space:]')
 
+          mkdir -p release-assets
+
+          if [ -z "$BASE" ] || [ -z "$MC" ] || [ -z "$PLATFORMS" ]; then
+            echo "::warning::Branch ${{ matrix.branch }}: could not resolve project_name/minecraftVersion/enabled_platforms (BASE='$BASE' MC='$MC' PLATFORMS='$PLATFORMS'). This branch's gradle.properties or gradle/libs.versions.toml doesn't match the expected layout — skipping jar collection for it."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
           echo "base=$BASE minecraft=$MC platforms=$PLATFORMS"
 
-          mkdir -p release-assets
+          any_found=0
           IFS=',' read -ra PLATS <<< "$PLATFORMS"
           for p in "${PLATS[@]}"; do
             p=$(echo "$p" | tr -d '[:space:]')
@@ -82,6 +90,7 @@ jobs:
               cp "$f" "release-assets/$newname"
               echo "  $f -> release-assets/$newname"
               found=1
+              any_found=1
             done < <(find . -path "*/visor-${p}/build/libs/*.jar" ! -name '*-dev.jar' ! -name '*-sources.jar')
             if [ "$found" -eq 0 ]; then
               echo "::warning::No release jar found for platform '$p' on branch ${{ matrix.branch }}"
@@ -91,7 +100,15 @@ jobs:
           echo "Assets:"
           ls -la release-assets/
 
+          if [ "$any_found" -eq 0 ]; then
+            echo "::warning::No release jars collected on branch ${{ matrix.branch }}"
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Upload jars to the release
+        if: steps.collect.outputs.found == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -101,6 +118,7 @@ jobs:
             --repo "${{ github.repository }}" --clobber
 
       - name: Upload build artifacts (traceability)
+        if: steps.collect.outputs.found == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: release-${{ steps.safe.outputs.name }}
