@@ -2,13 +2,7 @@ name: CI
 
 on:
   push:
-    branches:
-      - dev
-      - 'mc/**'
   pull_request:
-    branches:
-      - dev
-      - 'mc/**'
   workflow_dispatch:
 
 concurrency:
@@ -19,8 +13,46 @@ permissions:
   contents: read
 
 jobs:
+  discover:
+    name: Discover version branches
+    uses: ./.github/workflows/discover.yml
+
+  gate:
+    name: Check branch is a ship branch
+    needs: discover
+    runs-on: ubuntu-latest
+    outputs:
+      match: ${{ steps.check.outputs.match }}
+    steps:
+      - name: Match against ship list
+        id: check
+        run: |
+          set -euo pipefail
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manual dispatch — building unconditionally."
+            echo "match=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            CANDIDATE="${{ github.base_ref }}"
+          else
+            CANDIDATE="${{ github.ref_name }}"
+          fi
+
+          if echo '${{ needs.discover.outputs.branches }}' | jq -e --arg b "$CANDIDATE" 'index($b) != null' >/dev/null; then
+            echo "Branch '$CANDIDATE' is a ship branch — building."
+            echo "match=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Branch '$CANDIDATE' is not in the ship list — skipping build."
+            echo "match=false" >> "$GITHUB_OUTPUT"
+          fi
+
   build:
     name: Build
+    needs: gate
+    if: needs.gate.outputs.match == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

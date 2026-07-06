@@ -20,65 +20,7 @@ permissions:
 jobs:
   discover:
     name: Discover version branches
-    runs-on: ubuntu-latest
-    outputs:
-      branches: ${{ steps.list.outputs.branches }}
-      tag: ${{ steps.list.outputs.tag }}
-    steps:
-      - name: Checkout default branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.repository.default_branch }}
-
-      - name: Resolve tag and branch list
-        id: list
-        run: |
-          set -euo pipefail
-
-          TAG="${{ github.event.release.tag_name || inputs.tag }}"
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-
-          if [ ! -f .github/versions.json ]; then
-            echo "::error::.github/versions.json not found. Create it with the branch names/patterns to build, e.g. [\"dev\", \"mc/*\"]"
-            exit 1
-          fi
-
-          ENTRIES=$(jq -c 'if type=="array" then . else .branches end' .github/versions.json)
-
-          mapfile -t REMOTE_BRANCHES < <(git ls-remote --heads origin | sed 's#.*refs/heads/##')
-
-          RESOLVED=()
-          while IFS= read -r entry; do
-            case "$entry" in
-              *[\*\?\[]*)
-                matched=0
-                for b in "${REMOTE_BRANCHES[@]}"; do
-                  if [[ "$b" == $entry ]]; then
-                    RESOLVED+=("$b")
-                    matched=1
-                  fi
-                done
-                [ "$matched" -eq 0 ] && echo "::warning::Pattern '$entry' in versions.json matched no branches"
-                ;;
-              *)
-                if printf '%s\n' "${REMOTE_BRANCHES[@]}" | grep -qx -- "$entry"; then
-                  RESOLVED+=("$entry")
-                else
-                  echo "::warning::Branch '$entry' in versions.json does not exist, skipping"
-                fi
-                ;;
-            esac
-          done < <(echo "$ENTRIES" | jq -r '.[]')
-
-          if [ "${#RESOLVED[@]}" -eq 0 ]; then
-            echo "::error::No branches resolved from versions.json entries: $ENTRIES"
-            exit 1
-          fi
-
-          BRANCHES=$(printf '%s\n' "${RESOLVED[@]}" | awk '!seen[$0]++' | jq -R . | jq -sc .)
-
-          echo "Branches to build: $BRANCHES"
-          echo "branches=$BRANCHES" >> "$GITHUB_OUTPUT"
+    uses: ./.github/workflows/discover.yml
 
   build:
     name: Build ${{ matrix.branch }}
@@ -155,7 +97,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          gh release upload "${{ needs.discover.outputs.tag }}" release-assets/*.jar \
+          TAG="${{ github.event.release.tag_name || inputs.tag }}"
+          gh release upload "$TAG" release-assets/*.jar \
             --repo "${{ github.repository }}" --clobber
 
       - name: Upload build artifacts (traceability)
