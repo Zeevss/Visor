@@ -1,246 +1,131 @@
-# Mod Menu
-![Screenshot of the Mods screen, showing a list of a few mods on the left side below a search bar and filters button, where Mod Menu is selected. On the right side of the screen, it shows more details about the mod, such as authors, a description, links, credits, and a button to configure the mod.](res/screenshot1.jpg)
+# XaeroPlus
 
-Mod Menu lets you view the mods you have installed and, if supported by the mod, enables quick and easy access to the mod's config screens.
+<p align="center">
+  <a href="https://discord.gg/nJZrSaRKtb">
+  <img alt="Discord" src="https://dcbadge.vercel.app/api/server/nJZrSaRKtb">
+  </a>
+</p>
 
-Mod Menu also supports some more advanced features, such as translatable mod names and descriptions, support for [QuickText formatting](https://placeholders.pb4.eu/user/quicktext/) in mod descriptions thanks to [Patbox](https://ko-fi.com/patbox)'s [Text Placeholder API](https://modrinth.com/mod/placeholder-api), filters library mods out from regular mods, a mod update checker for mods hosted on Modrinth or that provide their own update sources, and deep configuration for all the features we provide.
+<p align="center">
+  <a href=https://modrinth.com/mod/xaeroplus ><img alt="Modrinth Downloads" src="https://img.shields.io/modrinth/dt/EnPUzSTg?style=for-the-badge&logo=modrinth&label=Modrinth&color=00AF5C"></a>
+  <a href=https://legacy.curseforge.com/minecraft/mc-mods/xaeroplus ><img alt="CurseForge Downloads" src="https://cf.way2muchnoise.eu/866084.svg?badge_style=for_the_badge"></a>
+</p>
 
-### Supported Platforms
-Mod Menu is currently available for Fabric or Quilt on Minecraft: Java Edition 1.14 or newer.
+<p align="center">
+  <img src="https://img.shields.io/badge/MC-1.12.2-brightgreen.svg" alt="Minecraft"/>
+  <img src="https://img.shields.io/badge/MC-1.19.2-brightgreen.svg" alt="Minecraft"/>
+  <img src="https://img.shields.io/badge/MC-1.19.4-brightgreen.svg" alt="Minecraft"/>
+  <img src="https://img.shields.io/badge/MC-1.20.1-brightgreen.svg" alt="Minecraft"/>
+  <img src="https://img.shields.io/badge/MC-1.20.2-brightgreen.svg" alt="Minecraft"/>
+  <img src="https://img.shields.io/badge/MC-1.20.4-brightgreen.svg" alt="Minecraft"/>
+  <img src="https://img.shields.io/badge/MC-1.20.6-brightgreen.svg" alt="Minecraft"/>
+  <img src="https://img.shields.io/badge/MC-1.21.1-brightgreen.svg" alt="Minecraft"/>
+  <img src="https://img.shields.io/badge/MC-1.21.3-brightgreen.svg" alt="Minecraft"/>
+  <img src="https://img.shields.io/badge/MC-1.21.4-brightgreen.svg" alt="Minecraft"/>
+  <img src="https://img.shields.io/badge/MC-1.21.5-brightgreen.svg" alt="Minecraft"/>
+  <img src="https://img.shields.io/badge/MC-1.21.8-brightgreen.svg" alt="Minecraft"/>
+  <img src="https://img.shields.io/badge/MC-1.21.10-brightgreen.svg" alt="Minecraft"/>
+  <img src="https://img.shields.io/github/languages/code-size/rfresh2/XaeroPlus.svg" alt="Code size"/>
+  <img src="https://img.shields.io/github/repo-size/rfresh2/XaeroPlus.svg" alt="GitHub repo size"/>
+  <img src="https://tokei.rs/b1/github/rfresh2/XaeroPlus?category=code&style=flat" alt="Lines of Code"/>
+</p>
 
-## Developers
-Mod Menu includes a number of APIs for developers to improve how their mod appears in Mod Menu. These come in the form of language keys, JSON metadata, and even a Java API.
+XaeroPlus is a client-side Minecraft mod that depends on and modifies the Xaero's WorldMap and Minimap mods with extra
+features and performance improvements - particularly for use on anarchy servers like 2b2t.
 
-### Translation API
-You can translate your mod's name, summary, and description all without touching any Java code. Simply add translation keys in the supported format to any language you'd like.
-
-<details>
-<summary>Translation API Documentation</summary>
-
-Here's an example of Mod Menu's translations into Pirate Speak. To create your own, simply replace `modmenu` at the end (***NOT*** the one in the beginning) of the translation key with your own mod ID, for example `modmenu.descriptionTranslation.traverse`.
-
-`en_pt.json`
-```json
-{
-    "modmenu.nameTranslation.modmenu": "Menu o' mods!",
-    "modmenu.descriptionTranslation.modmenu": "Menu o' mods ye installed matey!",
-    "modmenu.summaryTranslation.modmenu": "Menu o' mods ye installed matey!"
-}
-```
-
-> The summary translation is redundant here and does not need to be included because it's the same as the description, but it was included to show that you may translate the summary (a short, one-sentence description of the mod) separately from the description, even in English!
-
-</details>
-
-
-
-### Fabric Metadata API
-There's a number of things you can add just with metadata in your `fabric.mod.json`.
-
-All of these are added to a custom block in your `fabric.mod.json` for Mod Menu's metadata. Here's an example usage of many of the features this API provides:
-
-`fabric.mod.json`
-```json5
-{
-  ...
-  "custom": {
-    "modmenu": {
-      "links": {
-        "modmenu.discord": "https://discord.gg/jEGF5fb"
-      },
-      "badges": [ "library", "deprecated" ],
-      "parent": {
-        "id": "example-api",
-        "name": "Example API",
-        "description": "Modular example library",
-        "icon": "assets/example-api-module-v1/parent_icon.png",
-        "badges": [ "library" ]
-      },
-      "update_checker": true
-    }
-  }
-}
-```
+XaeroPlus is not affiliated or endorsed by xaero96. Please report issues to XaeroPlus's [Github](https://github.com/rfresh2/XaeroPlus/issues) or [discord server](https://discord.gg/nJZrSaRKtb).
 
 <details>
-<summary>Fabric Metadata API Documentation</summary>
-
-#### Badges (`"badges": [ ]`)
-While the `Client` badge is added automatically to mods set as client-side only (set `"environment": "client"` in `fabric.mod.json` to do this.), other badges such as the `Library` and `Deprecated` badges require definition here.
-
-Supported values:
-- `library` - should be assigned to mods that are purely dependencies for other mods that should not be shown to the user by default unless they toggle them on.
-- `deprecated` - should be assigned to mods that exist purely for legacy reasons, such as an old API module or such.
-
-Any others will be ignored, and Mod Menu does not support adding your own badges. You may open an issue [here](https://github.com/TerraformersMC/ModMenu/issues) if you have a compelling use case for a new badge.
-
-#### Links (`"links": { }`)
-The `links` object allows mod authors to add custom hyperlinks to the end of their description. If you specify a `sources` contact in the official `fabric.mod.json` metadata, it will also be included in the links section.
-
-Any key in the `links` object will be included in the links section, with the key being used as a translation key. For example, this:
-
-`fabric.mod.json`
-```json
-"custom": {
-    "modmenu": {
-        "links": {
-          "modmenu.discord": "https://discord.gg/jEGF5fb"
-        }
-    }
-}
-```
-will show as a link with the text "Discord", since "Discord" is the English translation of "modmenu.discord" provided by Mod Menu.
-
-Mod Menu provides several default translations that can be used for links. A full list can be seen in Mod Menu's language file [here](https://github.com/TerraformersMC/ModMenu/blob/-/src/main/resources/assets/modmenu/lang/en_us.json). All default link translation keys take the form `modmenu.<type>`.
-
-You can also provide your own translations if you would like to add custom links. Make sure to use ***your own namespace*** (as opposed to `modmenu`) for any custom keys.
-
-#### Parents (`"parent": "mod_id" or { }`)
-<img align="right" width="400" src="https://i.imgur.com/ZutCprf.png">
-
-Parents are used to display a mod as a child of another one. This is meant to be used for mods divided into different modules. The following element in a `fabric.mod.json` will define the mod as a child of the mod 'flamingo': 
-
-`fabric.mod.json`
-```json
-"custom": {
-    "modmenu": {
-        "parent": "flamingo"
-    }
-}
-```
-
-However, if you want to group mods under a parent, but the parent isn't an actual mod, you can do that too. In the example below, a mod is defining metadata for a parent. Make sure that this metadata is included in all of the children that use the fake/dummy parent. This can also be used as a fallback for an optional parent, it will be replace by the mod's real metadata if present.
-
-
-`fabric.mod.json`
-```json
-"custom": {
-    "modmenu": {
-        "parent": {
-            "id": "this-mod-isnt-real",
-            "name": "Fake Mod",
-            "description": "Do cool stuff with this fake mod",
-            "icon": "assets/real-mod/fake-mod-icon.png",
-            "badges": [ "library" ]
-        }
-    }
-}
-```
-
-Dummy parent mods only support the following metadata:
-- `id` (String)
-- `name` (String)
-- `description` (String)
-- `icon` (String)
-- `badges` (Array of Strings)
-
-
-#### Disable update checker (`"update_checker": false`)
-By default, Mod Menu's update checker will use the hash of your mod's jar to lookup the latest version on Modrinth. If it finds a matching project, it will check for the latest version that supports your mod loader and Minecraft version, and if it has a different hash from your existing file, it will prompt the user that there is an update available.
-
-You can disable the update checker by setting `update_checker` to false in your Mod Menu metadata like so:
-
-`fabric.mod.json`
-```json
-"custom": {
-    "modmenu": {
-        "update_checker": false
-    }
-}
-```
-
+<summary>Example Map</summary>
+<p align="center">
+  <img src="https://i.imgur.com/oYYhDoS.jpeg">
+</p>
 </details>
 
-### Quilt Metadata API
-Since Mod Menu supports Quilt as well, the same APIs in the Fabric Metadata API section are also available for Quilt mods, but the format for custom metadata is slightly different. 
+# Download
 
-Instead of a `"modmenu"` block inside of a `"custom"` block, you put the `"modmenu"` block as an element in the root object. So it should look like:
+Available on:
 
-`quilt.mod.json`
-```json5
-{
-  ...
-  "modmenu": {
-    // Here's where your links, badges, etc. stuff goes
-  }
-}
-```
+* [Github Releases](https://github.com/rfresh2/XaeroPlus/releases)
+* [Modrinth](https://modrinth.com/mod/xaeroplus)
+* [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/xaeroplus)
+* [GitHub Actions](https://github.com/rfresh2/XaeroPlus/actions?query=branch%3Amainline+)
 
-### Java API
-To use the Java API, you'll need to add Mod Menu as a compile-time dependency in your gradle project. This won't make your mod require Mod Menu, but it'll be present in your environment for you to test with.
+# Xaero Versions
 
-`build.gradle`
-```gradle
-// Add the Terraformers maven repo to your repositories block
-repositories {
-  maven {
-    name = "Terraformers"
-    url = "https://maven.terraformersmc.com/"
-  }
-}
+Each XaeroPlus release is only compatible with a specific version of Xaero's WorldMap and Minimap (or [BetterPVP](https://chocolateminecraft.com/betterpvp2.php)).
 
-// Add Mod Menu as a dependency in your environment
-dependencies {
-  // Prior to Minecraft 26.1 (or when using mappings), use `modImplementation` instead
-  implementation("com.terraformersmc:modmenu:${project.modmenu_version}")
-}
-```
-Then, define the version of Mod Menu you're using in your `gradle.properties`. You can get the latest version number [here](https://modrinth.com/mod/modmenu/version/latest), but you may need a different version if you're not using the latest Minecraft version. See the [versions page](https://modrinth.com/mod/modmenu/versions) for a full list of versions.
+Download and include these mods **in addition** to `XaeroPlus-*.jar` (3 jars total).
 
-`gradle.properties`
-```properties
-modmenu_version=VERSION_NUMBER_HERE
-```
-> If you don't want it in your environment for testing but still want to compile against Mod Menu for using the Java API, you can use `modCompileOnly` instead of `modImplementation` (this will work even if Mod Menu is not updated to the version of Minecraft you're running).
+You can find download links to Xaero's mods here:
+* https://modrinth.com/mod/xaeros-world-map/versions
+* https://modrinth.com/mod/xaeros-minimap/versions
 
-<details>
-<summary>Java API Documentation</summary>
+# Modifications
 
-### Getting Started
-To use the API, implement the ModMenuApi interface on a class and add that as an entry point of type "modmenu" in your `fabric.mod.json` like this:
+* [1.5-3x your FPS by limiting the framerate the minimap is rendered at!](https://youtu.be/hIG-VyGQLao)
+  * Tip: For least visual impact, lock the minimap's north
+* [Adjustable minimap scaling that increases how many chunks are visible](https://youtu.be/dNqxGzGAHyk)
+* [NewChunks Highlighting in MiniMap and WorldMap.](https://youtu.be/n-Tf6TJSsiA)
+* [Baritone](https://github.com/cabaletta/baritone) integration
+  * Baritone Goals synced as temporary waypoints
+  * [Point and Click Travel](https://youtu.be/gbguyfXLgi0)
+* [Waystones](https://legacy.curseforge.com/minecraft/mc-mods/waystones) and [Fabric Waystones](https://legacy.curseforge.com/minecraft/mc-mods/fabric-waystones) integration
+  * Syncs Waystones as temporary waypoints
+* [WorldTools](https://modrinth.com/mod/worldtools/) World Downloader integration
+  * [Highlights saved chunks while downloading](https://youtu.be/mtCqwJ_RGcc)
+* [Portals Highlighting in Minimap and WorldMap](https://youtu.be/zstGVfVRrAs)
+* [Portal Skip Highlighting in Minimap and WorldMap](https://youtu.be/g_yQ8D95RY0). Detects chunks where a portal could have been loaded.
+* OldChunks Highlighting in Minimap and WorldMap.
+  * Intended for use on 2b2t. Highlights chunks that were generated in 1.12.2 or lower in the Overworld and Nether based on the natural blocks present in the chunk.
+* [Transparent minimap background instead of wasted black screen space.](https://imgur.com/a/jGgHqL4)
+* [Fast map region writes](https://youtu.be/B5d7FaHXDCk). Prevent missed chunks in map while traveling at very high speeds.
+* Allow multiple MC instances to read/write to the same map concurrently
+* Transparent obsidian roof. Useful for mapping 2b2t spawn.
+* Setting to always view and create waypoints in the Overworld when in Nether.
+* [Render server view distance square around the player.](https://youtu.be/iY_JTGFK6Yg)
+* [Dimension hot-switching on WorldMap and Minimap.](https://youtu.be/hXZQtX2df3I)
+  * Recommended: Create keybinds for Minimap dimension switching.
+* WorldMap GUI:
+  * WorldMap zoom unlocked
+  * GUI on WorldMap to pan the map to user entered coordinates.
+  * WorldMap Follow mode and GUI button
+  * F1 on WorldMap hides GUI and overlays
+* Waypoints GUI:
+  * [Search](https://youtu.be/7DRMUsmZDxc)
+  * Display distance to waypoints on Waypoints GUI
+  * Always sort enabled waypoints before disabled waypoints
+  * GUI button to enable/disable all waypoints
+* [Waypoint Beacons](https://imgur.com/a/jGgHqL4)
+* Minecraft world always renders in background while in a Xaero GUI for client travel mods compatibility
+* Minimap entity dot fix. Hides the entity dot when arrow mode is selected.
+* WorldMap and Waypoint directories optionally indexed by:
+  * Multiplayer server list name.
+  * Base Server Domain Name
+  * Server IP (Xaero's default)
+  * **Changing this setting requires you to manually rename existing folders in `.minecraft/xaero/minimap` and `.minecraft/xaero/world-map`**
+* Overworld dimension optionally stored in the "DIM0" directory instead of "null"
+  * **Changing this setting requires you to manually rename existing folders in `.minecraft/xaero/world-map/Multiplayer_<server name>/`**
+* WorldMap 1.30.0 added cave data saving and rendering. There is a setting on by default in XaeroPlus that changes how the nether is rendered with cave mode off to be as it was previously.
+  * This removes the need to manually move existing world data files.
 
-`fabric.mod.json`
-```json
-"entrypoints": {
-  "modmenu": [ "com.example.mod.ExampleModMenuApiImpl" ]
-}
-```
+Configurations are in the Xaero WorldMap and Minimap settings GUI.
 
-### Mod Config Screens
-Mods can provide a Screen factory to provide a custom config screen to open with the config button. Implement the `getModConfigScreenFactory` method in your API implementation to do this.
+Toggleable settings support keybinds through the standard Minecraft Controls GUI.
 
-The intended use case for this is for mods to provide their own config screens. The mod id of the config screen is automagically determined by the source mod container that the entrypoint originated from.
+# Language Translations
 
-### Provided Config Screens
-Mods can provide Screen factories to provide a custom config screens to open with the config buttons for other mods as well. Implement the `getProvidedConfigScreenFactories` method in your API implementation for this.
+PR's are welcomed for language translations. 
 
-The intended use case for this is for a mod like Cloth Config to provide config screens for mods that use its API.
+Language files are located in `common/src/main/resources/assets/xaeroplus/lang/`
 
-### Modpack Badges
-Mods can give other mods the `Modpack` badge by implementing the `attachModpackBadges` method, such as through the following:
+Submit PR's targeting the `1.20.1` branch only. Changes will be merged to all the other MC versions by me.
 
-```java
-@Override
-public void attachModpackBadges(Consumer<String> consumer) {
-	consumer.accept("modmenu"); // Indicates that 'modmenu' is part of the modpack
-}
-```
+# Other Useful Tools
 
-Note that 'internal' mods such as Minecraft itself and the mod loader cannot be given the modpack badge, as they are not distributed within a typical modpack.
-
-### Static Helper Methods
-`ModMenuApi` also offers a few helper methods for mods that want to work with Mod Menu better, like making their own Mods buttons.
-
-#### Creating a Mods screen instance
-You can call this method to get an instance of the Mods screen:
-```java
-Screen createModsScreen(Screen previous)
-```
-
-#### Creating a Mods button `Text`
-You can call this method to get the Text that would be displayed on a Mod Menu Mods button:
-```java
-Text createModsButtonText()
-```
-
-</details>
+* Convert JourneyMap World Files to Xaero: [JMToXaero](https://github.com/Entropy5/JMtoXaero)
+* Convert JourneyMap Waypoints to Xaero: [JMWaypointsToXaero](https://github.com/rfresh2/JMWaypointsToXaero)
+* 2b2t World Download Xaero Maps:
+  * 2025 100k^2 (6GB): https://data.mc-archive.org/s/6XJqdEtxkqwSGrs
+    * Cache (15GB): https://data.mc-archive.org/s/HSB3aEatWDFwG4Z 
+  * 2022 256k^2 (20GB): https://data.mc-archive.org/s/eFDEy2XKof83Kez

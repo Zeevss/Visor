@@ -5,7 +5,6 @@ bin
 .metadata
 .classpath
 .project
-classes
 
 # idea
 out
@@ -14,17 +13,15 @@ out
 *.iml
 .idea
 
-# vscode
-.vscode
-
 # gradle
 build
 .gradle
+.kotlin
+.architectury-transformer
 
 # other
 eclipse
 run
-logs
 
-Thumbs.db
-*.psd
+# Files from Forge MDK
+forge*changelog.txt
