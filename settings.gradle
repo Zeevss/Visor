@@ -5,8 +5,6 @@ pluginManagement {
         maven { url = "https://maven.architectury.dev/" }
         maven { url = "https://maven.minecraftforge.net/" }
         maven { url = "https://maven.neoforged.net/" }
-        mavenCentral()
-        mavenLocal()
     }
 }
 
@@ -16,22 +14,11 @@ dependencyResolutionManagement {
         maven { url = "https://jitpack.io" }
         maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url = "https://redempt.dev" }
-        maven { url = 'https://maven.architectury.dev/' }
-        maven { url = "https://maven.fabricmc.net/" }
-        maven { url = 'https://maven.minecraftforge.net/' }
         exclusiveContent {
             forRepository { maven { url = "https://api.modrinth.com/maven" } }
             filter { includeGroup "maven.modrinth" }
         }
     }
 }
-
-rootProject.name = 'Visor'
-include 'visor-core','visor-forge','visor-fabric','visor-api'
-include 'visor-api:fabric'
-findProject(':visor-api:fabric')?.name = 'fabric'
-include 'visor-api:forge'
-findProject(':visor-api:forge')?.name = 'forge'
-include 'visor-core:stubs'
-findProject(':visor-core:stubs')?.name = 'stubs'
-
+rootProject.name = 'VisorEssentials'
+include 'mod-core','mod-forge','mod-fabric'

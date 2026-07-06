@@ -1,6 +1,0 @@
-package org.vmstudio.visor.api.common.network;
-
-
-public interface VisorPayloadToServer extends VisorPayload{
-
-}
